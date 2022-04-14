@@ -108,7 +108,7 @@ func (e *mysqlExecutor) getConn() (*sql.DB, error) {
 	e.db.SetMaxIdleConns(10)
 
 	timeout := time.After(time.Second * 30)
-	ticker := time.NewTicker(time.Microsecond * 500)
+	ticker := time.NewTicker(time.Millisecond * 500)
 	defer ticker.Stop()
 	tick := ticker.C
 	for {
