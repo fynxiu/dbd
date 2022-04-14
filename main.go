@@ -15,6 +15,7 @@ import (
 	"github.com/fynxiu/dbd/internal/constant"
 	"github.com/fynxiu/dbd/internal/driver"
 	"github.com/fynxiu/dbd/internal/transformer"
+	"github.com/fynxiu/dbd/internal/version"
 	"github.com/fynxiu/dbd/z"
 
 	"github.com/golang/glog"
@@ -36,6 +37,11 @@ var engineConfig *config.EngineConfig
 func init() {
 	flag.Parse()
 	flag.Lookup("alsologtostderr").Value.Set("true")
+
+	if len(os.Args) > 1 && os.Args[1] == "version" {
+		fmt.Println(version.Version)
+		os.Exit(0)
+	}
 
 	engineConfig = config.GetEngineConfig(*engineType)
 
