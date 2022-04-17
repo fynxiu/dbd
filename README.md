@@ -1,4 +1,4 @@
-# dbdd
+# dbd
 
-dbdd deduces a final db script from a sequence of scripts for migration.
+dbd deduces a final db script from a sequence of scripts for migration.
 
