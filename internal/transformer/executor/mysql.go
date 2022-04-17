@@ -13,7 +13,10 @@ import (
 	"github.com/golang/glog"
 )
 
-const databaseName = constant.DatabaseName
+const (
+	databaseName       = constant.DatabaseName
+	statementDelimiter = ";\n"
+)
 
 func init() {
 	registerExecutor(constant.EngineMysql, newMysqlExecutor)
@@ -52,9 +55,12 @@ func (e *mysqlExecutor) ExecuteScript(script string) error {
 	if err != nil {
 		return err
 	}
-	if _, err := db.Exec(script); err != nil {
-		glog.Infof("ExecuteScript failed, %v\nscript:%v", err, script)
-		return err
+
+	for _, x := range strings.Split(script, statementDelimiter) {
+		if _, err := db.Exec(x); err != nil {
+			glog.Infof("ExecuteScript failed, %v\nscript:%v", err, script)
+			return err
+		}
 	}
 
 	return nil
