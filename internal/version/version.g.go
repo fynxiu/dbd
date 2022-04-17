@@ -3,4 +3,4 @@
 package version
 
 // Version is the version of dbd.
-const Version = "v1.0.2"
+const Version = "v1.1.0"
