@@ -57,6 +57,9 @@ func (e *mysqlExecutor) ExecuteScript(script string) error {
 	}
 
 	for _, x := range strings.Split(script, statementDelimiter) {
+		if x = strings.TrimSpace(x); x == "" {
+			continue
+		}
 		if _, err := db.Exec(x); err != nil {
 			glog.Infof("ExecuteScript failed, %v\nscript:%v", err, script)
 			return err
