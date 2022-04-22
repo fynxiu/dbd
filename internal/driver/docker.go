@@ -5,6 +5,7 @@ import (
 
 	"github.com/fynxiu/dbd/internal/constant"
 	"github.com/fynxiu/dbd/internal/driver/provider"
+	"github.com/golang/glog"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/go-connections/nat"
@@ -18,6 +19,8 @@ var _ Driver = (*dockerDriver)(nil)
 const (
 	containerName = "fyn_sql_deduction_container"
 	filterKeyName = "name"
+
+	dockerStateExited = "exited"
 )
 
 // NewDockerDriver defines a docker implementation of Driver
@@ -55,6 +58,13 @@ func (d *dockerDriver) Reuse(ctx context.Context) error {
 	}
 	if len(containers) == 0 {
 		return constant.ErrContainerNotFound
+	}
+
+	glog.V(2).Infof("containter state: %v", containers[0].State)
+	if containers[0].State == dockerStateExited {
+		if err := d.client.ContainerStart(ctx, containers[0].ID, types.ContainerStartOptions{}); err != nil {
+			return err
+		}
 	}
 
 	return d.inspectPortBinding(ctx, containers[0].ID)
